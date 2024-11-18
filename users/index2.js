@@ -27,10 +27,10 @@ onValue(lightStatusRef, (snapshot) => {
   const status = snapshot.val();
     if (status === 'on') {
     document.body.classList.add('on');
-    audio.play();
+    
   } else {
     document.body.classList.remove('on');
-    audio.pause();
+    
   }
 });
 
