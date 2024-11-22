@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
-import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+import { getDatabase, ref, onValue, set, get} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
 // Your Firebase configuration
 
 
@@ -15,10 +15,32 @@ const firebaseConfig = {
     measurementId: "G-74GV52HWJ1"
   };
 
+
+const urlParams = new URLSearchParams(window.location.search);
+const authcode = urlParams.get('authcode');
+const button = document.getElementById("toggle");
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 const lightStatusRef = ref(database, 'light/status');
+var devices_array = []
+const devices = ref(database, 'devices');
+
+onValue(devices, (snapshot) => {
+  const data = snapshot.val();
+  console.log(data);
+  if (data.includes(authcode)) {
+    console.log('String exists in the array');
+  } else {
+    console.log('String does not exist in the array');
+    button.disabled = true;
+    // Call the function
+    displayError('Please Get Authorised');
+
+  }
+  
+});
+
 
 var toggle = document.querySelector('.toggle');
 
