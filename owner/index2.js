@@ -36,7 +36,7 @@ function addRandomStringToDevices(strings) {
           if (snapshot.exists()) {
               const devices = snapshot.val() || [];
               const randomString = Math.random().toString(36).substring(2, 10); // Generate random string
-              devices.push(randomString);
+              devices.push(strings);
 
               set(devicesRef, devices)
                   .then(() => {
@@ -68,7 +68,7 @@ function generateQRCode() {
   qrCodeContainer.innerHTML = ''; // Clear previous QR code
 
   // Generate the QR code using the QRCode library
-  QRCode.toCanvas(document.createElement('canvas'), randomString, function (error, canvas) {
+  QRCode.toCanvas(document.createElement('canvas'), "harshil-24.github.io/bluetooh-controlled/users/index.html?authcode="+randomString, function (error, canvas) {
       if (error) {
           console.error("Error generating QR code:", error);
       } else {
