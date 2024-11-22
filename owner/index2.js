@@ -4,6 +4,10 @@ import { getDatabase, ref, onValue, set, get} from "https://www.gstatic.com/fire
 
 
 
+var toggle = document.querySelector('.toggle');
+const audio = new Audio('1040.wav'); // Replace with your audio file path
+audio.loop = true;
+let isPlaying = false;
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
