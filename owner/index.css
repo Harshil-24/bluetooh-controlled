@@ -8,6 +8,17 @@
     border-radius: 2px;
     position: relative;
   }
+
+.switch1 {
+    display: block;
+    z-index: 1;
+    width: 15%;
+    background: #2a3f47;
+    transition: background 200ms;
+    margin: auto;
+    border-radius: 2px;
+    position: relative;
+  }
   .switch:after {
     content: "";
     display: block;
