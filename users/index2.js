@@ -67,3 +67,33 @@ toggle.addEventListener('click', function() {
   
 
 });
+
+function displayError(message) {
+  // Create the error container
+  const errorDiv = document.createElement('div');
+  errorDiv.textContent = message;
+  
+  // Apply styles to match your theme
+  Object.assign(errorDiv.style, {
+      position: 'fixed',
+      top: '10%',
+      left: '50%',
+      transform: 'translateX(-50%)',
+      padding: '1rem 2rem',
+      background: '#2a3f47', // Matches your dark theme background
+      color: '#fff', // White text for visibility
+      borderRadius: '8px',
+      boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)',
+      fontSize: '1.2rem',
+      textAlign: 'center',
+      zIndex: '1000',
+  });
+  
+  // Append the error to the body
+  document.body.appendChild(errorDiv);
+
+  // Remove the error after 3 seconds
+  setTimeout(() => {
+      errorDiv.remove();
+  }, 3000);
+}
