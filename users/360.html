@@ -1,18 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script src="https://aframe.io/releases/0.8.0/aframe.min.js"></script>
+  <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+  <script>
+    AFRAME.registerComponent('slow-gyro', {
+      init: function () {
+        const sceneEl = this.el.sceneEl;
+        const camera = this.el;
+        const scale = 0.3; // 👈 Smaller = less sensitive
+
+        function handleOrientation(event) {
+          const alpha = event.alpha || 0;
+          const beta = event.beta || 0;
+          const gamma = event.gamma || 0;
+
+          camera.setAttribute('rotation', {
+            x: beta * scale,
+            y: alpha * scale,
+            z: gamma * scale
+          });
+        }
+
+        window.addEventListener('deviceorientation', handleOrientation, true);
+      }
+    });
+  </script>
 </head>
 <body>
-    <a-scene>
-            <a-entity 
-                  camera 
-                  look-controls="magicWindowTrackingEnabled: true; touchEnabled: true; mouseEnabled: false; reverseMouseDrag: false" 
-                  wasd-controls-enabled="false"
-                  rotation-reader
-                  position="0 1.6 0">
-            </a-entity>
-        <a-sky src="img.png"></a-sky>
-    </a-scene> 
+  <a-scene>
+    <a-entity camera slow-gyro position="0 1.6 0"></a-entity>
+    <a-sky src="img.png"></a-sky>
+  </a-scene>
 </body>
 </html>
