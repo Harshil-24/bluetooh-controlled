@@ -2,40 +2,59 @@
 <html lang="en">
 <head>
   <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+
   <script>
-    AFRAME.registerComponent('slow-gyro', {
+    // Custom look-controls that reduces gyroscope sensitivity
+    AFRAME.registerComponent('custom-look-controls', {
       schema: {
-        scale: { type: 'number', default: 0.3 }
+        gyroScale: { type: 'number', default: 0.3 }
       },
+
       init: function () {
-        this.alpha = 0;
-        this.beta = 0;
-        this.gamma = 0;
+        this.originalPitch = 0;
+        this.originalYaw = 0;
 
-        window.addEventListener('deviceorientation', (e) => {
-          this.alpha = e.alpha || 0;
-          this.beta = e.beta || 0;
-          this.gamma = e.gamma || 0;
-        }, true);
+        this.previousAlpha = 0;
+        this.previousBeta = 0;
+        this.previousGamma = 0;
+
+        this.deviceOrientationHandler = this.handleOrientation.bind(this);
+        window.addEventListener('deviceorientation', this.deviceOrientationHandler);
       },
-      tick: function () {
-        const camera = this.el;
-        const rotation = camera.getAttribute('rotation');
 
-        // Only modify Y rotation (yaw) to avoid clashing too much with look-controls
-        rotation.y = this.alpha * this.data.scale;
-        camera.setAttribute('rotation', rotation);
+      handleOrientation: function (event) {
+        const alpha = event.alpha || 0;
+        const beta = event.beta || 0;
+        const gamma = event.gamma || 0;
+
+        this.originalPitch = beta * this.data.gyroScale;
+        this.originalYaw = alpha * this.data.gyroScale;
+      },
+
+      tick: function () {
+        const rotation = this.el.getAttribute('rotation');
+        // Only apply gyro to Y (yaw), leave X (pitch) to be combined with user touch
+        this.el.setAttribute('rotation', {
+          x: rotation.x,
+          y: this.originalYaw,
+          z: 0
+        });
+      },
+
+      remove: function () {
+        window.removeEventListener('deviceorientation', this.deviceOrientationHandler);
       }
     });
   </script>
 </head>
+
 <body>
   <a-scene>
-    <!-- Camera with look-controls for touch drag, slow-gyro for reduced sensitivity -->
-    <a-entity camera look-controls slow-gyro position="0 1.6 0"></a-entity>
+    <!-- Use normal look-controls for touch, and our custom one to scale gyro -->
+    <a-entity camera look-controls custom-look-controls="gyroScale: 0.3" position="0 1.6 0"></a-entity>
 
-    <!-- 360 background image -->
-    <a-sky src="img.png"></a-sky>
+    <!-- Your 360 image -->
+    <a-sky src="/img.png"></a-sky>
   </a-scene>
 </body>
 </html>
