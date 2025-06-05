@@ -4,31 +4,37 @@
   <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
   <script>
     AFRAME.registerComponent('slow-gyro', {
+      schema: {
+        scale: { type: 'number', default: 0.3 }
+      },
       init: function () {
-        const sceneEl = this.el.sceneEl;
+        this.alpha = 0;
+        this.beta = 0;
+        this.gamma = 0;
+
+        window.addEventListener('deviceorientation', (e) => {
+          this.alpha = e.alpha || 0;
+          this.beta = e.beta || 0;
+          this.gamma = e.gamma || 0;
+        }, true);
+      },
+      tick: function () {
         const camera = this.el;
-        const scale = 0.3; // 👈 Smaller = less sensitive
+        const rotation = camera.getAttribute('rotation');
 
-        function handleOrientation(event) {
-          const alpha = event.alpha || 0;
-          const beta = event.beta || 0;
-          const gamma = event.gamma || 0;
-
-          camera.setAttribute('rotation', {
-            x: beta * scale,
-            y: alpha * scale,
-            z: gamma * scale
-          });
-        }
-
-        window.addEventListener('deviceorientation', handleOrientation, true);
+        // Only modify Y rotation (yaw) to avoid clashing too much with look-controls
+        rotation.y = this.alpha * this.data.scale;
+        camera.setAttribute('rotation', rotation);
       }
     });
   </script>
 </head>
 <body>
   <a-scene>
-    <a-entity camera slow-gyro position="0 1.6 0"></a-entity>
+    <!-- Camera with look-controls for touch drag, slow-gyro for reduced sensitivity -->
+    <a-entity camera look-controls slow-gyro position="0 1.6 0"></a-entity>
+
+    <!-- 360 background image -->
     <a-sky src="img.png"></a-sky>
   </a-scene>
 </body>
