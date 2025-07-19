@@ -1,8 +1,0 @@
-<html>
-<body>
-
-  <video width="512" height="380" controls controlsList="nodownload">
-    <source data-src="https://curious-lokum-417e8a.netlify.app/final2.mp4" type="video/mp4">
-</video>
-</body>
-</html>
